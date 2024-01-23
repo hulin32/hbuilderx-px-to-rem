@@ -18,6 +18,6 @@ thanks @sainoba
 
 配置参数
 
-![配置参数](./images/config.png)
+![配置参数](https://github.com/flyingalex/hbuilderx-px-to-rem/blob/master/images/config.png)
 
 其他请移步[vscode-px-to-rem](https://github.com/sainoba/vscode-px-to-rem)文档
