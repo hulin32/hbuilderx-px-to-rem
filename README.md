@@ -1,4 +1,6 @@
-﻿该Hbuilderx插件使用https://github.com/sainoba/vscode-px-to-rem修改，thanks @sainoba
+﻿该Hbuilderx插件使用 https://github.com/sainoba/vscode-px-to-rem修改
+
+thanks @sainoba
 
 主要配置
 ```
