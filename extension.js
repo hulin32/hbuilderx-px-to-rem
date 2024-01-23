@@ -140,60 +140,20 @@ function placeholder(regexString, replaceFunction, textEditor) {
       let numOcurrences = 0;
       selections.forEach(selection => {
         // Iterates over each selected line
-        for (
-          var index = selection.start.line;
-          index <= selection.end.line;
-          index++
-        ) {
-          let start = 0,
-            end = textEditor.document.lineAt(index).range.end.character;
-          // Gets the first and last selected characters for the line
-          if (index === selection.start.line) {
-            let tmpSelection = selection.with({ end: selection.start });
-            let range = findValueRangeToConvert(
-              tmpSelection,
-              regexString,
-              textEditor
-            );
-            if (range) {
-              start = range.start.character;
-            } else {
-              start = selection.start.character;
-            }
-          }
-          if (index === selection.end.line) {
-            let tmpSelection = selection.with({ start: selection.end });
-            let range = findValueRangeToConvert(
-              tmpSelection,
-              regexString,
-              textEditor
-            );
-            if (range) {
-              end = range.end.character;
-            } else {
-              end = selection.end.character;
-            }
-          }
-          // Gets the text of the line
-          let text = textEditor.document.lineAt(index).text.slice(start, end);
-          // Counts the number of times the regex appears in the line
-          const matches = text.match(regexExpG);
-          numOcurrences += matches ? matches.length : 0;
-          if (numOcurrences == 0) {
-            continue;
-          } // No ocurrences, so it's worth continuing
+        let text = textEditor.document.getText(selection);
+        // Counts the number of times the regex appears in the line
+        const matches = text.match(regexExpG);
+        numOcurrences += matches ? matches.length : 0;
+        if (numOcurrences !== 0) {
           const regex = onlyChangeFirst ? regexExp : regexExpG;
           //
           const newText = text.replace(regex, replaceFunction);
           // Replace text in the text file
-          const selectionTmp = new vscode.Selection(index, start, index, end);
-          const key = `${index}-${start}-${end}`;
-          if (!changesMade.has(key)) {
-            changesMade.set(key, true);
-            builder.replace(selectionTmp, newText);
+          if (!changesMade.has(selection)) {
+            changesMade.set(selection, true);
+            builder.replace(selection, newText);
           }
         }
-        return;
       }, this);
       if (warningIfNoChanges && numOcurrences == 0) {
         vscode.window.showWarningMessage("There were no values to transform");
@@ -209,7 +169,7 @@ function placeholder(regexString, replaceFunction, textEditor) {
       });
       textEditor.selections = textEditor.selections;
       if (!success) {
-        console.log(`Error: ${success}`);
+        console.log(`Error: ${success} `);
       }
     });
 }
